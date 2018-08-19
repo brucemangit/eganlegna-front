@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>I need your help</title>
+    <title class="help-detail-title">Help Detail</title>
 
     <!-- Bootstrap core CSS-->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -39,7 +39,6 @@
       <!-- Navbar Search -->
       <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
           <div class="input-group-append">
             <button class="btn btn-primary" type="button">
               <i class="fas fa-search"></i>
@@ -142,10 +141,8 @@
           </ol>
 
           <!-- Page Content -->
-          <h1>Help</h1>
+          <h1 class="help-detail-title">here</h1>
           <hr>
-          <p>Create your cause here. Be precise on what you want and waht kind of help you need.</p>
-
         </div>
 
 
@@ -153,55 +150,18 @@
         <div class="container">
             <div class="card mx-auto ">
               <div class="card-body">
-                <form>
                   <div class="form-group">
                     <div class="form-row">
                       <div class="col-md-12">
                         <div class="form-label-group">
-                          <input type="text" id="inputTitle" class="form-control" placeholder="Title" required="required" autofocus="autofocus">
-                          <label for="inputTitle">Title</label>
+                          <p class="help-detail-description"></p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <div class="form-row">
-                      <div class="col-md-6">
-                        <div class="form-label-group">
-                          <select id="selectCategory" class="form-control" required="required">
-                            <option value="">Select Category</option>
-                            <option value="1">Rehabilitation</option>
-                            <option value="2">Education</option>
-                            <option value="2">Religious</option>
-                            <option value="2">Entertainment</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="form-label-group">
-                              <select id="selectHelpType" class="form-control" required="required">
-                                <option value="">The help you need</option>
-                                <option value="1">Finance</option>
-                                <option value="2">Advice</option>
-                                <option value="2">Resource</option>
-                                <option value="2">Time</option>
-                              </select>
-                              
-                            </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                      <div class="form-label-group">
-                        <textarea rows="8" id="inputDescription" class="form-control" placeholder="Help Description" required="required">
-                        </textarea>
-                      </div>
-                  </div>                  
-                  <button type="button" class="btn btn-primary btn-block help-request-submit">Request Help</button>
-                </form>
               </div>
             </div>
-          </div>
+        </div>
       
 
 
@@ -259,25 +219,19 @@
     <script>
         //var url = "https://lit-refuge-27790.herokuapp.com";
         var url = "http://localhost:8080";
-        $(".help-request-submit").click(function(){
-          var data = '{"title":"'+$("#inputTitle").val()+'", ';
-          data = data + '"categories":[{"id":"'+$("#selectCategory").val()+'"}], ';
-          data = data + '"helpType":[{"id":"'+$("#selectHelpType").val()+'"}], ';
-          data = data + '"message":"'+$("#inputDescription").val()+'"}'; 
+        var id = location.search.split('id=')[1]
+        $(function(){
           $.ajax({
-            url: url+"/api/help",
-            type: "POST",
+            url: url+"/api/help/"+id,
+            type: "GET",
             dataType: "json",
             contentType: 'application/json',
             headers: {"Authorization": "Bearer "+localStorage.getItem('auth_token')},
-            data: data, 
             success: function(data) {
               console.log("make it here somehow");
               console.log(data);
-              if (data.success) {
-                //localStorage.setItem('auth_token', data.object.token);
-                console.log(data);
-              }
+              $('.help-detail-title').html(data.title);
+              $('.help-detail-description').html(data.message);
             },
             error: function (data) {
               console.log("make it here somehow in error");
