@@ -1,5 +1,5 @@
 //var url = "http://localhost:8080";
-var url = "tranquil-everglades-44709";
+var url = "https://peaceful-tor-26661.herokuapp.com";
 
 function getURLParams() {
     var vars = {};
