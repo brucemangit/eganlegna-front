@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin - Login</title>
+    <title>EgnaLegna - Login</title>
 
     <!-- Bootstrap core CSS-->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -65,9 +65,8 @@
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/egna-legna.js"></script>
     <script>
-      var url = "https://peaceful-tor-26661.herokuapp.com";
-      //var url = "http://localhost:8080";
       $(".login-button").click(function(){
         var data = '{"email":"'+$("#inputEmail").val()+'", "password":"'+$("#inputPassword").val()+'"}'; 
         $.ajax({
@@ -81,6 +80,7 @@
             console.log(data);
             if (data.success) {
               localStorage.setItem('auth_token', data.object.token);
+              window.location = "/help-list.html";
             }
           },
           error: function (data) {
