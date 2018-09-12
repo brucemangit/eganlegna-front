@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>I need your help</title>
+    <title>Help Resources - Pictures, Videos, Sound recording..</title>
 
     <!-- Bootstrap core CSS-->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -136,13 +136,13 @@
             <li class="breadcrumb-item">
               <a href="index.html">Dashboard</a>
             </li>
-            <li class="breadcrumb-item active">Need Help</li>
+            <li class="breadcrumb-item active">Help Resources</li>
           </ol>
 
           <!-- Page Content -->
-          <h1>Help</h1>
+          <h1>Pictures, Videos, Sound..</h1>
           <hr>
-          <p>Create your cause here. Be precise on what you want and what kind of help you need.</p>
+          <p>Upload Pictures Videos or Sound that will support the help post</p>
           <p class="alert alert-success da-message"></p>
         </div>
 
@@ -151,51 +151,24 @@
         <div class="container">
             <div class="card mx-auto ">
               <div class="card-body">
-                <form>
+                <form id="main-form">
                   <div class="form-group">
                     <div class="form-row">
                       <div class="col-md-12">
                         <div class="form-label-group">
-                          <input type="text" id="inputTitle" class="form-control" placeholder="Title" required="required" autofocus="autofocus">
-                          <label for="inputTitle">Title</label>
+                          <input type="file" id="inputFile1" class="form-control" name="resourceFile" placeholder="File" required="required">
+                          <label for="inputFile1">Upload</label>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="form-row">
-                      <div class="col-md-6">
+                      <div class="col-md-12">
                         <div class="form-label-group">
-                          <select id="selectCategory" class="form-control" required="required">
-                            <option value="">Select Category</option>
-                            <option value="1">Rehabilitation</option>
-                            <option value="2">Education</option>
-                            <option value="2">Religious</option>
-                            <option value="2">Entertainment</option>
-                          </select>
+                          <input type="file" id="inputFile2" class="form-control" name="resourceFile" placeholder="File" required="required">
+                          <label for="inputFile2">Uploads</label>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                          <div class="form-label-group">
-                              <select id="selectHelpType" class="form-control" required="required">
-                                <option value="">The help you need</option>
-                                <option value="1">Finance</option>
-                                <option value="2">Advice</option>
-                                <option value="2">Resource</option>
-                                <option value="2">Time</option>
-                              </select>
-                              
-                            </div>
-                      </div>
                     </div>
-                  </div>
-                  <div class="form-group">
-                      <div class="form-label-group">
-                        <textarea rows="8" id="inputDescription" class="form-control" placeholder="Help Description" required="required">
-                        </textarea>
-                      </div>
-                  </div>                  
-                  <button type="button" class="btn btn-primary btn-block help-request-submit">Create Help</button>
+                  </div>                
+                  <button type="button" class="btn btn-primary btn-block help-resources-submit">Upload Files</button>
                 </form>
               </div>
             </div>
@@ -236,27 +209,28 @@
     <script src="js/sb-admin.min.js"></script>
     <script src="js/egna-legna.js"></script>
     <script>
-        $(".help-request-submit").click(function(){
-          var data = '{"title":"'+$("#inputTitle").val()+'", ';
-          data = data + '"categories":[{"id":"'+$("#selectCategory").val()+'"}], ';
-          data = data + '"helpType":[{"id":"'+$("#selectHelpType").val()+'"}], ';
-          data = data + '"message":"'+$("#inputDescription").val()+'"}'; 
+        $(".help-resources-submit").click(function(){
+          var form = $("#main-form")[0];
+          var data = new FormData(form);
+          var params = getURLParams();
+          data.append("helpId", params.id);
+          
           $.ajax({
-            url: url+"/api/help",
+            url: url+"/api/help/resources",
             type: "POST",
-            dataType: "json",
-            contentType: 'application/json',
             headers: {"Authorization": "Bearer "+localStorage.getItem('auth_token')},
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false,
             data: data, 
             success: function(data) {
-              console.log("make it here somehow");
+              console.log("make it here in resource");
               console.log(data);
               if (data.success) {
-                //localStorage.setItem('auth_token', data.object.token);
                 console.log(data);
                 $('.da-message').removeClass('alert-danger').addClass('alert-success');
-                $('.da-message').html("Successfully Posted");
-                window.location = "help-resources.html?id="+data.object.help.id;
+                $('.da-message').html("Successfully Uploaded");
               }
             },
             error: function (data) {
