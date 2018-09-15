@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>You can help too..</title>
+    <title>My Donations</title>
 
     <!-- Bootstrap core CSS-->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -142,28 +142,22 @@
           <!-- DataTables Example -->
           <div class="card mb-3">
             <div class="card-header">
-              <a href="help.html">Need Help?</a></a></div>
+              <a href="deposit.html">Your current donatable amount is:</a></a></div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Title</th>
-                      <th>By</th>
-                      <th>Category</th>
-                      <th>Help Type</th>
-                      <th>Posted On</th>
-                      <th>With in</th>
+                      <th>For</th>
+                      <th>Amount</th>
+                      <th>Date</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                        <th>Title</th>
-                        <th>By</th>
-                        <th>Category</th>
-                        <th>Help Type</th>
-                        <th>Posted On</th>
-                        <th>With in</th>
+                        <th>For</th>
+                        <th>Amount</th>
+                        <th>Date</th>
                     </tr>
                   </tfoot>
                   <tbody class="help-list">
@@ -171,9 +165,6 @@
                       <td>Tiger Nixon</td>
                       <td>System Architect</td>
                       <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td>$320,800</td>
                     </tr>
                   </tbody>
                 </table>
@@ -248,21 +239,17 @@
     <script>
         $(function(){
           $.ajax({
-            url: url+"/api/help",
+            url: url+"/api/contribution",
             dataType: "json",
             contentType: 'application/json',
             headers: {"Authorization": "Bearer "+localStorage.getItem('auth_token')},
             success: function(data) {
-              
+              console.log(data);
                 var helps = "";
-                $.each(data, function(index, help){
-                  helps += "<tr><td><a href='/help-detail.html?id="+help.id+"'>" + help.title + "</td>";
-                  helps += "<td>" + help.member.firstName + "</td>";
-                  helps += "<td>" + "category" + "</td>";
-                  helps += "<td>" + "help type" + "</td>";
-                  var dateCreated = new Date(help.dateCreated);
-                  helps += "<td>" + dateCreated.toLocaleDateString("en-US")  + "</td>";
-                  helps += "<td>" + "within week" + "</td></tr>";
+                $.each(data.object, function(index, help){
+                  helps += "<tr><td><a href='/help-detail.html?id="+help.help.id+"'>" + help.help.title + "</td>";
+                  helps += "<td>" + help.contribution + "</td>";
+                  helps += "<td>" + help.dateCreated + "</td>";
                 });
                 $('.help-list').html(helps);
             },

@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Deposit for Future Donations</title>
+    <title>Edit Member</title>
 
     <!-- Bootstrap core CSS-->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -137,13 +137,11 @@
             <li class="breadcrumb-item">
               <a href="index.html">Dashboard</a>
             </li>
-            <li class="breadcrumb-item active">Depsit For Future Donations</li>
+            <li class="breadcrumb-item active">Edit Profile</li>
           </ol>
 
           <!-- Page Content -->
-          <h1>Deposit</h1>
-          <hr>
-          <p>Deposit any amount you like. You will use this deposit to donate for causes</p>
+          <h1>Edit Profile</h1>
 
         </div>
 
@@ -160,13 +158,13 @@
           <ul class="nav bg-light nav-pills rounded nav-fill mb-3" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" data-toggle="pill" href="#nav-tab-card">
-              <i class="fa fa-credit-card"></i> Credit Card</a></li>
+               Edit Profile</a></li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="pill" href="#nav-tab-paypal">
-              <i class="fab fa-paypal"></i>  Paypal</a></li>
+               Change Password</a></li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="pill" href="#nav-tab-bank">
-              <i class="fa fa-university"></i>  Bank Transfer</a></li>
+                Login Information</a></li>
           </ul>
           
           <div class="tab-content">
@@ -174,77 +172,28 @@
             <p class="alert alert-success donation-message"></p>
             <form role="form">
             <div class="form-group">
-              <label for="username">Full name (on the card)</label>
-              <input type="text" class="form-control" name="username" placeholder="" required="">
+              <label for="username">First Name</label>
+              <input type="text" id="inputFirstName" class="form-control" name="inputFirstName" placeholder="" required="">
             </div> <!-- form-group.// -->
           
             <div class="form-group">
-              <label for="cardNumber">Card number</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="cardNumber" placeholder="">
-                <div class="input-group-append">
-                  <span class="input-group-text text-muted">
-                    <i class="fab fa-cc-visa"></i>   <i class="fab fa-cc-amex"></i>   
-                    <i class="fab fa-cc-mastercard"></i> 
-                  </span>
-                </div>
-              </div>
-            </div> <!-- form-group.// -->
+                <label for="username">Last Name</label>
+                <input type="text" id="inputLastName" class="form-control" name="inputLastName" placeholder="" required="">
+              </div> <!-- form-group.// -->
           
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="form-group">
-                        <label><span class="hidden-xs">Expiration</span> </label>
-                      <div class="input-group">
-                        <input type="number" class="form-control" placeholder="MM" name="">
-                          <input type="number" class="form-control" placeholder="YY" name="">
-                      </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">CVV <i class="fa fa-question-circle"></i></label>
-                        <input type="number" class="form-control" required="">
-                    </div> <!-- form-group.// -->
-                </div>
-            </div> <!-- row.// -->
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="form-group">
-                        <label><span class="hidden-xs">Deposit</span> </label>
-                      <div class="input-group">
-                        <input id="inputDeposit" type="number" class="form-control" placeholder="$" name="">
-                      </div>
-                    </div>
-                </div>
-            </div> <!-- row.// -->            
-            <button class="subscribe btn btn-primary btn-block btn-deposit" type="button"> I want to Deposit  </button>
+              <div class="form-group">
+                  <label for="username">Email</label>
+                  <input type="text" id="inputEmail" class="form-control" name="inputEmail" placeholder="" required="">
+                </div> <!-- form-group.// -->        
+            <button class="subscribe btn btn-primary btn-block btn-update-member" type="button">Update</button>
             </form>
           </div> <!-- tab-pane.// -->
           <div class="tab-pane fade" id="nav-tab-paypal">
-          <p>Paypal is easiest way to pay online</p>
-          <p>
-          <button type="button" class="btn btn-primary"> <i class="fab fa-paypal"></i> Log in my Paypal </button>
-          </p>
-          <p><strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. </p>
+          <p>To be updated soon</p>
+          
           </div>
           <div class="tab-pane fade" id="nav-tab-bank">
-          <p>Bank accaunt details</p>
-          <dl class="param">
-            <dt>BANK: </dt>
-            <dd> THE WORLD BANK</dd>
-          </dl>
-          <dl class="param">
-            <dt>Accaunt number: </dt>
-            <dd> 12345678912345</dd>
-          </dl>
-          <dl class="param">
-            <dt>IBAN: </dt>
-            <dd> 123456789</dd>
-          </dl>
-          <p><strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. </p>
+          <p>To be updated soon</p>
           </div> <!-- tab-pane.// -->
           </div> <!-- tab-content .// -->
           
@@ -310,11 +259,28 @@
     <script src="js/sb-admin.min.js"></script>
     <script src="js/egna-legna.js"></script>
     <script>
-        $(".btn-deposit").click(function(){
-          var data = '{"deposit":"'+$("#inputDeposit").val()+'"}'; 
+        $(function(){
           $.ajax({
-            url: url+"/api/contribution/deposit",
-            type: "POST",
+            url: url+"/api/member/current",
+            type: "get",
+            dataType: "json",
+            contentType: "application/json",
+            headers: {"Authorization": "Bearer "+localStorage.getItem('auth_token')},
+            success: function(data) {
+              console.log(data);
+              $('#inputFirstName').val(data.object.firstName);
+              $('#inputLastName').val(data.object.lastName);
+              $('#inputEmail').val(data.object.email);
+            }
+          });
+        });
+
+        $(".btn-update-member").click(function(){
+          var data = '{"firstName":"'+$("#inputFirstName").val()+'", ';
+          data += '"lastName":"'+$("#inputLastName").val()+'", "email":"'+$("#inputEmail").val()+'"}'; 
+          $.ajax({
+            url: url+"/api/member",
+            type: "PUT",
             dataType: "json",
             contentType: 'application/json',
             headers: {"Authorization": "Bearer "+localStorage.getItem('auth_token')},

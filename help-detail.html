@@ -272,8 +272,9 @@ img {
               <span>Settings</span>
             </a>
             <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                <h6 class="dropdown-header">Login Screens:</h6>
+                <a class="dropdown-item" href="edit-member.html">Edit Profile</a>
                 <a class="dropdown-item" href="forgot-password.html">Forgot Password</a>
+                <a class="dropdown-item" href="donation-list.html">Your Donations</a>
                 <div class="dropdown-divider"></div>
               </div>
           </li>
@@ -321,7 +322,7 @@ img {
                   <ul class="preview-thumbnail nav nav-tabs">
 
                   </ul>
-                  
+                  <div> <a class="add-more-pictures" href="/help-resources">Add More Pictures(Only help owner)</a></div>
                 </div>
                 <div class="details col-md-6">
                   <div class="rating">
@@ -342,6 +343,51 @@ img {
             </div>
           </div>
         </div>
+
+
+        <div class="container">
+            <div class="row">
+            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+                
+                    <!-- Fluid width widget -->        
+                  <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <span class="glyphicon glyphicon-comment"></span> 
+                                Recent Comments
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="media-list help-comments">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End fluid width widget --> 
+                    
+            </div>
+          </div>
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+               <div class="col-md-12 mx-auto">
+                  <div class="myform form ">
+                     <form action="">
+                        <div>Your Comment/Questions.. Here</div>
+                        <div class="form-group">
+                           <textarea id="inputHelpComment" name="inputHelpComment"  class="form-control my-input" placeholder="Comment">
+                           </textarea>
+                        </div>
+                        <div class="text-center ">
+                           <button type="button" class=" btn btn-success send-button">Submit Your Comment</button>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
 
 
         <!-- /.container-fluid -->
@@ -424,6 +470,7 @@ img {
               
               var contribute = '/contribute.html?id='+id+'&title='+data.title;
               $('.i-want-to-help').attr('href', contribute);
+              $('.add-more-pictures').attr('href', '/help-resources?id='+id);
               //once the main stuff is loaded, then pull images and videos
               pullResources(id);
             },
@@ -436,7 +483,7 @@ img {
           })
         });
 
-        function pullResources() {
+        function pullResources(id) {
           $.ajax({
             url: url+"/api/help/resources/"+id,
             type: "GET",
@@ -457,6 +504,7 @@ img {
               
               $('.preview-pic').html(preview);
               $('.preview-thumbnail').html(thumbnail);
+              pullComments(id);
             },
             error: function (data) {
               console.log("make it here somehow in error");
@@ -466,6 +514,75 @@ img {
             }
           });
         }
+
+        function pullComments(id) {
+          $.ajax({
+            url: url+"/api/help/comments/"+id,
+            type: "GET",
+            dataType: "json",
+            contentType: 'application/json',
+            headers: {"Authorization": "Bearer "+localStorage.getItem('auth_token')},
+            success: function(data) {
+              console.log("make it here somehow");
+              console.log(data);
+              var comment = "";
+              $.each(data.object, function (key, value) {
+                comment += commentSegment(value.member.firstName, value.member.lastName, value.comment);
+              });
+              
+              $('.help-comments').html(comment);
+            },
+            error: function (data) {
+              console.log("make it here somehow in error");
+              console.log(data);
+              $('.da-message').removeClass('alert-danger').addClass('alert-success');
+              $('.da-message').html("Successfully Deposited");
+            }
+          });
+        }
+
+        $('.send-button').click(function(){
+          var id = location.search.split('id=')[1];
+          var comment = $("#inputHelpComment").val();
+          var data = '{"comment":"'+ comment+'", "help":{"id":"'+id+'"}}';
+          $.ajax({
+            url: url+'/api/help/comments',
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: data,
+            headers: {"Authorization": "Bearer "+localStorage.getItem('auth_token')},
+            success: function(data) {
+              //successfully commented
+              $('.help-comments').prepend(commentSegment("Your", "Comment", comment));
+              $('.help-comment').html('');
+            },
+            error: function(data) {
+              console.log("error while sending comment");
+              console.log(data);
+            }
+          });
+        });
+
+        function commentSegment(firstName, lastName, comment) {
+          var segment = '<li class="media">' +
+              '<div class="media-left">' +
+                  '<img src="http://placehold.it/60x60" class="img-circle">' +
+              '</div>' +
+              '<div class="media-body">' +
+                  '<h4 class="media-heading">' +
+                      firstName+ ' ' +lastName +
+                      '<br>' +
+                  '</h4>' +
+                  '<p>' +
+                      comment
+                  '</p>' +
+              '</div>' +
+          '</li>';
+
+          return segment;
+        }
+
     </script>
   </body>
 
